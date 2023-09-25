@@ -8,23 +8,22 @@ import LocationRegionService from '../../services/locationRegionService';
 
 const Create = () => {
   const { products, setProducts } = useContext(UserContext);
+
+  const [provinces, setProvinces] = useState([]);
+
+  const [locationRegion, setLocationRegion] = useState({
+    provinceId: 0,
+    provinceName: '',
+  });
+
   const [product, setProduct] = useState({
     title: '',
     price: 0,
     locationRegion: {},
   });
 
-  const [provinces, setProvinces] = useState([]);
-  const [locationRegion, setLocationRegion] = useState({
-    provinceId: 0,
-    provinceName: '',
-  });
-
   const handleGetAllProvinces = async () => {
     const dataProvinces = await LocationRegionService.getAllProvinces();
-
-    console.log(dataProvinces.data.results);
-
     setProvinces(dataProvinces.data.results);
   };
 
@@ -47,18 +46,15 @@ const Create = () => {
       provinceName,
     });
 
-    const newProduct = product;
-    newProduct.locationRegion = locationRegion;
-
-    setProduct(newProduct);
+    setProduct({
+      ...product,
+      locationRegion,
+    });
   };
 
   const handleCreateProduct = () => {
-    // setProducts([...products, product]);
-
-    const newProduct = ProductService.create(product);
-
-    setProduct({ title: '', price: 0 });
+    ProductService.create(product);
+    setProduct({ title: '', price: 0, locationRegion });
   };
 
   useEffect(() => {
@@ -122,7 +118,7 @@ const Create = () => {
                   {provinces.length &&
                     provinces.map((item) => {
                       return (
-                        <option value={item.province_id}>
+                        <option value={item.province_id} key={item.province_id}>
                           {item.province_name}
                         </option>
                       );
