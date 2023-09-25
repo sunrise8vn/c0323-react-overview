@@ -45,17 +45,19 @@ const Create = () => {
       provinceId,
       provinceName,
     });
-
-    setProduct({
-      ...product,
-      locationRegion,
-    });
   };
 
   const handleCreateProduct = () => {
     ProductService.create(product);
     setProduct({ title: '', price: 0, locationRegion });
   };
+
+  useEffect(() => {
+    setProduct({
+      ...product,
+      locationRegion,
+    });
+  }, [locationRegion]);
 
   useEffect(() => {
     handleGetAllProvinces();
